@@ -6,16 +6,22 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/pkg/errors"
+	"github.com/roger.russel/90poe/internal/container"
 )
 
-func Run(ctx context.Context, cancel context.CancelFunc) {
+func Run(ctx context.Context, cancel context.CancelFunc, debs *container.Dependency) {
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	go handleSystemCall(ctx, sig, cancel)
 
 	log.Println("server is starting")
 
-	// ToDO Add Run Server Here
+	if err := run(ctx, &debs.Srv); err != nil {
+		log.Println("critical error on start", err)
+		cancel()
+	}
 
 	<-ctx.Done()
 	log.Println("server is shutting down")
@@ -31,4 +37,12 @@ func handleSystemCall(ctx context.Context, sig chan os.Signal, cancel context.Ca
 
 		return
 	}
+}
+
+func run(ctx context.Context, srv *container.Services) error {
+	if err := srv.Port.Run(ctx); err != nil {
+		return errors.Wrap(err, "error running port server")
+	}
+
+	return nil
 }
