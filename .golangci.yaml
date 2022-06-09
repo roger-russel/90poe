@@ -1,0 +1,41 @@
+linters:
+  enable-all: true
+  disable:
+    - scopelint
+    - interfacer
+    - golint
+    - maligned
+    - varnamelen
+    - exhaustivestruct
+    - gochecknoglobals
+    - paralleltest
+    - testpackage
+    - wsl
+    - execinquery # temporary disable for a bug in publisher. reenable soon
+    - exhaustruct
+    - tagliatelle
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+issues:
+  fix: false
+  include:
+    - EXC0001
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - funlen
+        - lll
+        - dupl
+        - cyclop
+        - containedctx
+        - govet
+
+run:
+  timeout: 1m
+  skip-dirs:
+    - mocks
