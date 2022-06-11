@@ -2,17 +2,21 @@ package streamer
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"log"
 	"os"
 )
 
+var _ Inter = (*JSON)(nil)
+
 const DefaultBufferParserSize int = 4096 // 4kb
 
-type JsonConfig struct {
+type JSONConfig struct {
 	BufferParserSize int
 }
 
-type Json struct {
+type JSON struct {
 	bufferParserSize int
 	chDataOutput     chan Data
 
@@ -25,20 +29,20 @@ type Json struct {
 	lifoToken          []byte
 }
 
-func NewJson(conf JsonConfig) Inter {
+func NewJSON(conf JSONConfig) *JSON {
 	bufferParserSize := conf.BufferParserSize
 
 	if bufferParserSize < 1 {
 		bufferParserSize = DefaultBufferParserSize
 	}
 
-	return &Json{
+	return &JSON{
 		bufferParserSize: bufferParserSize,
 		readerStage:      rdrStageFindStart,
 	}
 }
 
-func (j *Json) Stream(ctx context.Context, reader io.Reader, chDataOutput chan Data) error {
+func (j *JSON) Stream(ctx context.Context, reader io.Reader, chDataOutput chan Data) error {
 	j.chDataOutput = chDataOutput
 	for {
 		select {
@@ -55,18 +59,22 @@ func (j *Json) Stream(ctx context.Context, reader io.Reader, chDataOutput chan D
 	}
 }
 
-func (j *Json) StreamFile(ctx context.Context, filePath string, chDataOutput chan Data) error {
+func (j *JSON) StreamFile(ctx context.Context, filePath string, chDataOutput chan Data) error {
 	file, err := os.Open(filePath)
 	if err != nil {
-		return err
+		return fmt.Errorf("error opening file %s: %w", filePath, err)
 	}
 
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Println("error closing file", filePath, err)
+		}
+	}()
 
 	return j.Stream(ctx, file, chDataOutput)
 }
 
-func (j *Json) sendJson() {
+func (j *JSON) sendJSON() {
 	j.chDataOutput <- Data{
 		KeyName:    j.bufferKeyName,
 		KeyContent: j.bufferKeyContent,

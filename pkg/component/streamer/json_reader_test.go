@@ -15,7 +15,6 @@ func TestJson_handleBackslash(t *testing.T) {
 		args args
 		want []want
 	}{
-
 		{
 			name: "simple",
 			args: args{c: []byte("a")},
@@ -105,7 +104,7 @@ func TestJson_handleBackslash(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			j := &Json{
+			j := &JSON{
 				bufferParserSize: DefaultBufferParserSize,
 			}
 

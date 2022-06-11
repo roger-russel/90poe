@@ -2,4 +2,4 @@ package streamer
 
 import "errors"
 
-var ErrContextCancelationCalled error = errors.New("context cancellation got called, streamer will stop right now")
+var ErrContextCancelationCalled = errors.New("context cancellation got called, streamer will stop right now")

@@ -12,6 +12,7 @@ func minify(t *testing.T, d []byte) string {
 	cp := bytes.NewBuffer([]byte{})
 	if err := json.Compact(cp, d); err != nil {
 		t.Errorf("unable to minimize json: %v", string(d))
+
 		return ""
 	}
 
@@ -31,7 +32,7 @@ func TestJson_Stream(t *testing.T) {
 
 	tests := []struct {
 		name string
-		conf JsonConfig
+		conf JSONConfig
 		args args
 		want []want
 	}{
@@ -41,7 +42,7 @@ func TestJson_Stream(t *testing.T) {
 				ctx:      context.Background(),
 				filePath: "../../../_test/assets/json-streamer/object.json",
 			},
-			conf: JsonConfig{
+			conf: JSONConfig{
 				BufferParserSize: 100,
 			},
 			want: []want{
@@ -66,7 +67,7 @@ func TestJson_Stream(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			j := NewJson(tt.conf)
+			j := NewJSON(tt.conf)
 
 			ctx := context.Background()
 			ctx, cancel := context.WithCancel(ctx)
