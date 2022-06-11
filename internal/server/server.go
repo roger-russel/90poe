@@ -34,6 +34,7 @@ func handleSystemCall(ctx context.Context, sig chan os.Signal, cancel context.Ca
 	case <-sig:
 		log.Println("system call server to shutdown")
 		cancel()
+
 		return
 	}
 }
@@ -43,5 +44,6 @@ func run(ctx context.Context, srv *container.Services, cancel context.CancelFunc
 		return errors.Wrap(err, "error running port server")
 	}
 	cancel() // start shutdown
+
 	return nil
 }
