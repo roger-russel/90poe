@@ -1,0 +1,11 @@
+_test
+.vscode
+build
+.git
+.golangci.yaml
+*.md
+*_test.go
+bin
+docs
+coverage.*
+*.out

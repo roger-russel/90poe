@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  app:
+    container_name: "90poe"
+    user: nobody
+    build:
+      context: ./../
+      target: runner
+      dockerfile: build/Dockerfile
+    environment:
+      FILE: /data/ports.json
+      BUFFER_SIZE: 4096
+    volumes:
+      - ../_test/assets/:/data
