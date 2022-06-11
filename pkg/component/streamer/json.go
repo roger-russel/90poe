@@ -65,6 +65,17 @@ func (j *JSON) StreamFile(ctx context.Context, filePath string, chDataOutput cha
 		return fmt.Errorf("error opening file %s: %w", filePath, err)
 	}
 
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return fmt.Errorf("error getting stat of file %s: %w", filePath, err)
+	}
+
+	if fileInfo.IsDir() {
+		return ErrPathToFileIsDirectory
+	}
+
+	log.Printf("open file %v to streaming", filePath)
+
 	defer func() {
 		if err := file.Close(); err != nil {
 			log.Println("error closing file", filePath, err)
