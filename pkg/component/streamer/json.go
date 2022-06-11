@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-const defaultBufferParserSize int = 4096 // 4kb
+const DefaultBufferParserSize int = 4096 // 4kb
 
 type JsonConfig struct {
 	BufferParserSize int
@@ -29,7 +29,7 @@ func NewJson(conf JsonConfig) Inter {
 	bufferParserSize := conf.BufferParserSize
 
 	if bufferParserSize < 1 {
-		bufferParserSize = defaultBufferParserSize
+		bufferParserSize = DefaultBufferParserSize
 	}
 
 	return &Json{
