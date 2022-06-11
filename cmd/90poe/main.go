@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/roger.russel/90poe/internal/container"
@@ -23,6 +24,14 @@ func main() {
 	if err != nil {
 		panic(err) // panic is acceptable only on main
 	}
+	if err = run(ctx, cancel, dep); err != nil {
+		panic(err) // panic is acceptable only on main
+	}
+}
 
-	server.Run(ctx, cancel, dep)
+func run(ctx context.Context, cancel context.CancelFunc, dep *container.Dependency) error {
+	if err := server.Run(ctx, cancel, dep); err != nil {
+		return fmt.Errorf("error running server: %w", err)
+	}
+	return nil
 }

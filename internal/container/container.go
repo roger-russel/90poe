@@ -19,8 +19,8 @@ type Services struct {
 }
 
 type Dependency struct {
-	Cmp Components
-	Srv Services
+	Cmp *Components
+	Srv *Services
 }
 
 func New(ctx context.Context, flags flags.Flags) (context.Context, *Dependency, error) {
@@ -41,8 +41,8 @@ func New(ctx context.Context, flags flags.Flags) (context.Context, *Dependency, 
 	port := port.New(ctx, portRepo)
 
 	dep := Dependency{
-		Cmp: Components{},
-		Srv: Services{
+		Cmp: cmp,
+		Srv: &Services{
 			Port: port,
 		},
 	}

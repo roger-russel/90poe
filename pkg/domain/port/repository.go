@@ -44,3 +44,7 @@ func (r *Repository) Stream(ctx context.Context, ch chan streamer.Data) error {
 func (r *Repository) Upsert(ctx context.Context, key string, data []byte) {
 	r.db.Upsert(ctx, key, data)
 }
+
+func (r *Repository) Table(ctx context.Context) db.KeyDB {
+	return r.db.Table(ctx)
+}
