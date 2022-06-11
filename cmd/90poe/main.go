@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/roger.russel/90poe/internal/container"
+	"github.com/roger.russel/90poe/internal/flags"
 	"github.com/roger.russel/90poe/internal/server"
 )
 
@@ -18,7 +19,7 @@ func main() {
 		}
 	}()
 
-	ctx, dep, err := container.New(ctx)
+	ctx, dep, err := container.New(ctx, flags.Load())
 	if err != nil {
 		panic(err) // panic is acceptable only on main
 	}

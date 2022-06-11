@@ -18,7 +18,7 @@ func Run(ctx context.Context, cancel context.CancelFunc, debs *container.Depende
 
 	log.Println("server is starting")
 
-	if err := run(ctx, &debs.Srv); err != nil {
+	if err := run(ctx, &debs.Srv, cancel); err != nil {
 		log.Println("critical error on start", err)
 		cancel()
 	}
@@ -34,15 +34,14 @@ func handleSystemCall(ctx context.Context, sig chan os.Signal, cancel context.Ca
 	case <-sig:
 		log.Println("system call server to shutdown")
 		cancel()
-
 		return
 	}
 }
 
-func run(ctx context.Context, srv *container.Services) error {
+func run(ctx context.Context, srv *container.Services, cancel context.CancelFunc) error {
 	if err := srv.Port.Run(ctx); err != nil {
 		return errors.Wrap(err, "error running port server")
 	}
-
+	cancel() // start shutdown
 	return nil
 }

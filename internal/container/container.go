@@ -3,6 +3,9 @@ package container
 import (
 	"context"
 
+	"github.com/roger.russel/90poe/internal/flags"
+	"github.com/roger.russel/90poe/pkg/component/orm"
+	"github.com/roger.russel/90poe/pkg/component/streamer"
 	"github.com/roger.russel/90poe/pkg/domain/port"
 )
 
@@ -18,8 +21,13 @@ type Dependency struct {
 	Srv Services
 }
 
-func New(ctx context.Context) (context.Context, *Dependency, error) {
-	port := port.New(ctx, nil)
+func New(ctx context.Context, flags flags.Flags) (context.Context, *Dependency, error) {
+	jsonConfig := streamer.JsonConfig{
+		BufferParserSize: flags.ParserBufferSize,
+	}
+
+	portRepo := port.NewRepository(ctx, streamer.NewJson(jsonConfig), orm.New(ctx))
+	port := port.New(ctx, portRepo)
 
 	dep := Dependency{
 		Cmp: Components{},
