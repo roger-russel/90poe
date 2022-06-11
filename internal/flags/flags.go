@@ -10,8 +10,14 @@ type Flags struct {
 }
 
 func Load() Flags {
-	return Flags{
-		File:             *flag.String("file", "", "file to be read"),
-		ParserBufferSize: *flag.Int("parserBufferSize", 0, "parser buffer size"),
+	f := flag.String("file", "", "read file on path")
+	s := flag.Int("buffer-size", 0, "parser buffer size")
+	flag.Parse()
+
+	fl := Flags{
+		File:             *f,
+		ParserBufferSize: *s,
 	}
+
+	return fl
 }
